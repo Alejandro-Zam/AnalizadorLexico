@@ -5,4 +5,5 @@ from Categoria import *
 class Token:
     palabra: str
     categoria: Categoria
-    indice_sgte: int
+    linea: int
+    posicion: int

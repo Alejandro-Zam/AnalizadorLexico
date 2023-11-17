@@ -19,6 +19,8 @@ class Categoria(Enum):
     CADENA_CARACTERES = 15
     COMENTARIO_LINEA = 16
     COMENTARIO_BLOQUE = 17
+    REALES = 18
+    ERROR_CADENA_SIN_CERRAR = 19
     
     
     

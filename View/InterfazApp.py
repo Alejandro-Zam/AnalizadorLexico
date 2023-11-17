@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import scrolledtext
 
 class InterfazApp:
     def __init__(self, root, analizador):
@@ -13,9 +14,8 @@ class InterfazApp:
         # Etiqueta y entrada de texto
         self.label = tk.Label(root, text="Ingrese una cadena de texto:", font=("Arial", 14))
         self.label.pack(pady=10)
-        self.texto_var = tk.StringVar()
-        self.entry_texto = tk.Entry(root, textvariable=self.texto_var, font=("Arial", 12), width=40 )
-        self.entry_texto.pack(pady=10, padx=5)
+        self.area_codigo = scrolledtext.ScrolledText(root, width=40, height=10)
+        self.area_codigo.pack(pady=10)
 
         # Botón de análisis
         self.boton_analizar = tk.Button(root, text="Analizar", font=('Arial',12) ,width=12)

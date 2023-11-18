@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Categoria import *
+from Modelo.Categoria import *
 
 @dataclass
 class Token:

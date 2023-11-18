@@ -8,10 +8,9 @@ class App:
     def __init__(self, root):
         self.root = root
         # Crear instancia de Analizador
-        self.analizador = Analizador()
 
         # Crear instancia de InterfazApp
-        self.interfaz = InterfazApp(root, self.analizador)
+        self.interfaz = InterfazApp(root)
 
 if __name__ == "__main__":
     root = tk.Tk()

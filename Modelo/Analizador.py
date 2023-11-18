@@ -1,18 +1,17 @@
-# Analizador.py
-from Token import *
+from Modelo.Token import *
 
 class Analizador:
 
-    def __init__(self, codigoAnalizar):
-        self.codigoAnalizar = codigoAnalizar
+    def __init__(self):
+        
         self.listaTokens = []
     
-    def analizar(self):
+    def analizar(self, codigoAnalizar):
         # Posición de la línea desde donde empieza a analizar
         indice_linea = 0
 
         # Se separa el codigoAnalizar por líneas de código
-        lineasCodigoAnalizar = separarLineas(self.codigoAnalizar)
+        lineasCodigoAnalizar = separarLineas(codigoAnalizar)
 
         while indice_linea < len(lineasCodigoAnalizar):
             linea = lineasCodigoAnalizar[indice_linea]
@@ -23,60 +22,64 @@ class Analizador:
 
                 #Detectar cadena
                 if indice_caracter < len(linea) and linea[indice_caracter] == '"':
-                    indice_caracter = self.Detectar_cadena(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_cadena(self, linea, indice_linea, indice_caracter)
 
                 #Detectar Identificadores
                 if indice_caracter < len(linea) and linea[indice_caracter] == '&':
-                    indice_caracter = self.Detectar_idenficiador(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_idenficiador(self, linea, indice_linea, indice_caracter)
                 
                 #Detectar Palabras reservadas
                 if indice_caracter < len(linea) and linea[indice_caracter] == '%':
-                    indice_caracter = self.Detectar_Reservadas(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Reservadas(self, linea, indice_linea, indice_caracter)
 
                 #Detectar Operadores Incremento
                 if indice_caracter < len(linea) and linea[indice_caracter] == '+':
-                    indice_caracter = self.Detectar_Incremento(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Incremento(self, linea, indice_linea, indice_caracter)
                 
                 #Detectar Operadores Decremento
                 if indice_caracter < len(linea) and linea[indice_caracter] == '-':
-                    indice_caracter = self.Detectar_Decremento(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Decremento(self, linea, indice_linea, indice_caracter)
                 
                 #Detectar Operadores Aritmeticos
                 if indice_caracter < len(linea) and linea[indice_caracter] in {'-', '+', '*', '/', '%', '^'}:   
-                    indice_caracter = self.Detectar_Aritmeticos(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Aritmeticos(self, linea, indice_linea, indice_caracter)
 
                 #Dectectar Operadores de comparación
                 if indice_caracter < len(linea) and linea[indice_caracter] in {'=', '!', '>', '<'}:   
-                    indice_caracter = self.Detectar_Comparacion(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Comparacion(self, linea, indice_linea, indice_caracter)
+
+                if indice_caracter < len(linea) and linea[indice_caracter].strip() == ';':
+                     indice_caracter = self.Detectar_Terminal(self, linea, indice_linea, indice_caracter)
 
                 # Detectar Operadores logicos
                 if indice_caracter < len(linea) and linea[indice_caracter] == '_':
-                    indice_caracter = self.Detectar_logicos(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_logicos(self, linea, indice_linea, indice_caracter)
 
                 # Detectar Operadores asignacion
                 if indice_caracter < len(linea) and linea[indice_caracter] == '=':
-                    indice_caracter = self.Detectar_asignacion(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_asignacion(self, linea, indice_linea, indice_caracter)
                 
                 # Detectar llaves o parentesis
                 if indice_caracter < len(linea) and linea[indice_caracter] in {'(', ')', '{', '}'}:  
-                    indice_caracter = self.Detectar_llaves_parentesis(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_llaves_parentesis(self, linea, indice_linea, indice_caracter)
 
                 # Detectar Hexadecimal
                 if indice_caracter < len(linea) and linea[indice_caracter] == '#':
-                    indice_caracter = self.Detectar_Hexa(linea, indice_linea, indice_caracter+1)
+                    indice_caracter = self.Detectar_Hexa(self, linea, indice_linea, indice_caracter+1)
 
                 #Detectar Numeros
                 if indice_caracter < len(linea) and linea[indice_caracter].isdigit():
-                    indice_caracter = self.Detectar_Reales(linea, indice_linea, indice_caracter)
-                    indice_caracter = self.Detectar_Naturales(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Reales(self, linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_Naturales(self, linea, indice_linea, indice_caracter)
+
 
                 # Detectar comentario de linea
                 if indice_caracter < len(linea) and linea[indice_caracter] == "!": 
-                    indice_caracter = self.Detectar_comentario_linea(linea, indice_linea, indice_caracter)
+                    indice_caracter = self.Detectar_comentario_linea(self, linea, indice_linea, indice_caracter)
                 
                 # Detectar comentario de bloque
                 if indice_caracter < len(linea) and linea[indice_caracter] == "¡": 
-                    indice_linea = self.detectar_comentario_bloque(linea, indice_linea, indice_caracter,lineasCodigoAnalizar)
+                    indice_linea = self.detectar_comentario_bloque(self, linea, indice_linea, indice_caracter,lineasCodigoAnalizar)
                 
                 if indice_caracter < len(linea):
                     if(linea[indice_caracter]!=" "):
@@ -85,6 +88,8 @@ class Analizador:
                 indice_caracter += 1
 
             indice_linea += 1
+
+        return self.listaTokens    
 
     
 
@@ -369,6 +374,20 @@ class Analizador:
                 return indice_caracter
             else:
                 return indiceInicial
+            
+    def Detectar_Terminal(self, linea, indice_linea, indice_caracter):
+        indice_inicial = indice_caracter
+        while indice_caracter < len(linea):
+            finalizacion = linea[indice_caracter]
+
+            if finalizacion == ';':
+                self.listaTokens.append(Token(';', Categoria.TERMINAL, indice_linea + 1, indice_caracter))
+                indice_caracter += 1
+            else:
+                break
+
+        return indice_caracter
+
 
 def separarLineas(texto):
     # Divide el texto en líneas
@@ -376,33 +395,3 @@ def separarLineas(texto):
 
     # Retorna el arreglo con las líneas
     return lineas
-
-
-codigo_a_analizar = """cl_O_ass MiClase:
-"AWA"$AASshdhsd4312.10dnfdnfhey
-    def __init__(self, valor):
-    #AD12
-        self.valor = valor
-¡¡    -   -  + / 
-    def imprimir_valor(self):
-        print(self.valor)
-    "&asddddddd-dd
-    "CADENA">=<=
-    %DELETE_O_ !!
-!-Esto es un comentario
-
-&gtgg1=+
-objeto = MiClase(42)
-3273721%UPDATEad_Y_hsdyey!%DORMIRRnsdhueerd
-ajssjd+++ue0.1jdjdue%CREATE++=-
-12837236261323.0
-objeto.impr=/imir_valor()
-"""
-analizador = Analizador(codigo_a_analizar)
-analizador.analizar()
-
-# Imprime la lista de tokens generada
-for token in analizador.listaTokens:
-    print(token)
-
-
